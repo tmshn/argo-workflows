@@ -23,6 +23,9 @@ func (wfc *WorkflowController) updateConfig() error {
 		return err
 	}
 	log.Info("Configuration:\n" + string(bytes))
+	if wfc.session != nil {
+		defer wfc.session.Close()
+	}
 	wfc.session = nil
 	wfc.artifactRepositories = artifactrepositories.New(wfc.kubeclientset, wfc.namespace, &wfc.Config.ArtifactRepository)
 	wfc.offloadNodeStatusRepo = sqldb.ExplosiveOffloadNodeStatusRepo
